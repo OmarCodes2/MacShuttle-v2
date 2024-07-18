@@ -22,6 +22,12 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "4de9ff24-2df8-49ce-bda9-25cec44a3522"
+      }
+    },
+    "owner": "bakro"
   }
 }

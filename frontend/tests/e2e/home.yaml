@@ -1,0 +1,4 @@
+appId: 4de9ff24-2df8-49ce-bda9-25cec44a3522
+---
+- launchApp
+- assertVisible: 'Open up App.js to start working on your app!'
