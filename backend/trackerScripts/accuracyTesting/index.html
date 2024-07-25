@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Car Tracker Test</title>
+</head>
+<body>
+    <h1>Car Tracker Accuracy Test</h1>
+    <button onclick="startTracking()">Start Tracking</button>
+    <button onclick="stopTracking()">Stop Tracking</button>
+    <button onclick="downloadResults()">Download Results</button>
+    <pre id="results"></pre>
+
+    <script>
+        let intervalId;
+        let results = [];
+        const DURATION = 15 * 60 * 1000; // 15 minutes
+        const INTERVAL = 5 * 1000; // 5 seconds
+        const WIALON_ENDPOINT = 'https://hst-api.wialon.com/wialon/ajax.html?svc=core/search_item&params={"id":401471421,"flags":1025}&sid=4105f40af22648abfa4ae53645779cfb';
+
+        async function startTracking() {
+            intervalId = setInterval(fetchAndStoreLocations, INTERVAL);
+
+            setTimeout(() => {
+                stopTracking();
+            }, DURATION);
+        }
+
+        function stopTracking() {
+            clearInterval(intervalId);
+            saveResults();
+            displayResults();
+        }
+
+        async function fetchAndStoreLocations() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(async (position) => {
+                    const lat = position.coords.latitude;
+                    const lon = position.coords.longitude;
+
+                    // Fetch location from Wialon API
+                    const wialonResponse = await fetch(WIALON_ENDPOINT).then(response => response.json());
+
+                    const wialonLat = wialonResponse.item.pos.y;
+                    const wialonLon = wialonResponse.item.pos.x;
+
+                    const data = {
+                        timestamp: new Date().toISOString(),
+                        actualLocation: { latitude: lat, longitude: lon },
+                        wialonLocation: { latitude: wialonLat, longitude: wialonLon }
+                    };
+
+                    results.push(data);
+
+                    console.log("Data stored:", data);
+                });
+            } else {
+                alert("Geolocation is not supported by this browser.");
+            }
+        }
+
+        function saveResults() {
+            localStorage.setItem('trackerResults', JSON.stringify(results));
+        }
+
+        function displayResults() {
+            document.getElementById('results').textContent = JSON.stringify(results, null, 2);
+        }
+
+        function downloadResults() {
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(results));
+            const downloadAnchorNode = document.createElement('a');
+            downloadAnchorNode.setAttribute("href", dataStr);
+            downloadAnchorNode.setAttribute("download", "tracker_results.json");
+            document.body.appendChild(downloadAnchorNode);
+            downloadAnchorNode.click();
+            downloadAnchorNode.remove();
+        }
+    </script>
+</body>
+</html>
