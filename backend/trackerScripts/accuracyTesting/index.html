@@ -2,12 +2,24 @@
 <html>
 <head>
     <title>Car Tracker Test</title>
+    <style>
+        button {
+            font-size: 20px;
+            padding: 10px 20px;
+            margin: 10px;
+        }
+        .location-display {
+            font-size: 16px;
+            margin: 10px 0;
+        }
+    </style>
 </head>
 <body>
     <h1>Car Tracker Accuracy Test</h1>
     <button onclick="startTracking()">Start Tracking</button>
     <button onclick="stopTracking()">Stop Tracking</button>
     <button onclick="downloadResults()">Download Results</button>
+    <div id="locationData" class="location-display"></div>
     <pre id="results"></pre>
 
     <script>
@@ -15,7 +27,7 @@
         let results = [];
         const DURATION = 15 * 60 * 1000; // 15 minutes
         const INTERVAL = 5 * 1000; // 5 seconds
-        const WIALON_ENDPOINT = 'https://hst-api.wialon.com/wialon/ajax.html?svc=core/search_item&params={"id":401471421,"flags":1025}&sid=4105f40af22648abfa4ae53645779cfb';
+        const WIALON_ENDPOINT = 'https://hst-api.wialon.com/wialon/ajax.html?svc=core/search_item&params={"id":401471421,"flags":1025}&sid=PASTESESSIONIDHERE';
 
         async function startTracking() {
             intervalId = setInterval(fetchAndStoreLocations, INTERVAL);
@@ -52,6 +64,9 @@
                     results.push(data);
 
                     console.log("Data stored:", data);
+
+                    // Update the location display
+                    document.getElementById('locationData').innerText = `Actual Location: (${lat}, ${lon})\nWialon Location: (${wialonLat}, ${wialonLon})`;
                 });
             } else {
                 alert("Geolocation is not supported by this browser.");
