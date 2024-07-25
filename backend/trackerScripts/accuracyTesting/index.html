@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Car Tracker Test v2</title>
+    <title>Car Tracker Test V3</title>
     <style>
         button {
             font-size: 20px;
@@ -15,7 +15,7 @@
     </style>
 </head>
 <body>
-    <h1>Car Tracker Accuracy Test V2.1</h1>
+    <h1>Car Tracker Accuracy Test</h1>
     <button onclick="startTracking()">Start Tracking</button>
     <button onclick="stopTracking()">Stop Tracking</button>
     <button onclick="downloadResults()">Download Results</button>
@@ -28,6 +28,7 @@
         const DURATION = 15 * 60 * 1000; // 15 minutes
         const INTERVAL = 5 * 1000; // 5 seconds
         const WIALON_ENDPOINT = 'https://hst-api.wialon.com/wialon/ajax.html?svc=core/search_item&params={"id":401471421,"flags":1025}&sid=41ff5b90157ae389098f56e9386c175e';
+        const CORS_PROXY = 'https://cors-anywhere.herokuapp.com/';
 
         async function startTracking() {
             intervalId = setInterval(fetchAndStoreLocations, INTERVAL);
@@ -49,8 +50,8 @@
                     const lat = position.coords.latitude;
                     const lon = position.coords.longitude;
 
-                    // Fetch location from Wialon API
-                    const wialonResponse = await fetch(WIALON_ENDPOINT).then(response => response.json());
+                    // Fetch location from Wialon API through the CORS proxy
+                    const wialonResponse = await fetch(CORS_PROXY + WIALON_ENDPOINT).then(response => response.json());
 
                     const wialonLat = wialonResponse.item.pos.y;
                     const wialonLon = wialonResponse.item.pos.x;
