@@ -15,7 +15,7 @@
     </style>
 </head>
 <body>
-    <h1>Car Tracker Accuracy Test</h1>
+    <h1>Car Tracker Accuracy Test V4.1</h1>
     <button onclick="startTracking()">Start Tracking</button>
     <button onclick="stopTracking()">Stop Tracking</button>
     <button onclick="downloadResults()">Download Results</button>
@@ -27,7 +27,7 @@
         let results = [];
         const DURATION = 15 * 60 * 1000; // 15 minutes
         const INTERVAL = 5 * 1000; // 5 seconds
-        const WIALON_ENDPOINT = 'https://hst-api.wialon.com/wialon/ajax.html?svc=core/search_item&params={"id":401471421,"flags":1025}&sid=41085fa5c08f429ed81cd3511300c35b';
+        const WIALON_ENDPOINT = 'https://hst-api.wialon.com/wialon/ajax.html?svc=core/search_item&params={"id":401471421,"flags":1025}&sid=41d5dfad91d8d7b4fd36d4f7434f7adc';
         const CORS_PROXY = 'https://cors-anywhere.herokuapp.com/';
 
         async function startTracking() {
