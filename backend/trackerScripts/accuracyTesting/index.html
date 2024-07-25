@@ -15,7 +15,7 @@
     </style>
 </head>
 <body>
-    <h1>Car Tracker Accuracy Test</h1>
+    <h1>Car Tracker Accuracy Test V2.1</h1>
     <button onclick="startTracking()">Start Tracking</button>
     <button onclick="stopTracking()">Stop Tracking</button>
     <button onclick="downloadResults()">Download Results</button>
@@ -27,7 +27,7 @@
         let results = [];
         const DURATION = 15 * 60 * 1000; // 15 minutes
         const INTERVAL = 5 * 1000; // 5 seconds
-        const WIALON_ENDPOINT = 'https://hst-api.wialon.com/wialon/ajax.html?svc=core/search_item&params={"id":401471421,"flags":1025}&sid=PASTESESSIONIDHERE';
+        const WIALON_ENDPOINT = 'https://hst-api.wialon.com/wialon/ajax.html?svc=core/search_item&params={"id":401471421,"flags":1025}&sid=41ff5b90157ae389098f56e9386c175e';
 
         async function startTracking() {
             intervalId = setInterval(fetchAndStoreLocations, INTERVAL);
