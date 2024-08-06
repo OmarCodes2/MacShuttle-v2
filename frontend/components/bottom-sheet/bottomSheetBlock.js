@@ -1,7 +1,7 @@
 import React from 'react';
 import { Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { colors } from '@/constants/styles/colors';
+import { colors } from '../../constants/styles/colors';
 
 const BottomSheetBlock = ({
   leftText,
@@ -38,14 +38,14 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 16,
     color: colors.white,
-    fontFamily: 'Montserrat-Regular',
+    // fontFamily: 'Montserrat-Regular',
   },
   rightText: {
     flex: 1,
     fontSize: 16,
     color: colors.white,
     textAlign: 'right',
-    fontFamily: 'Montserrat-Regular',
+    // fontFamily: 'Montserrat-Regular',
   },
   icon: {
     marginLeft: 8,

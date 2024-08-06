@@ -6,7 +6,7 @@ import {
   requestForegroundPermissionsAsync,
 } from 'expo-location';
 import MapMarker from './marker';
-import { busStops } from '@/constants/map/locations';
+import { busStops } from '../../constants/map/location';
 
 const DEFAULT_DELTA = 0.005;
 

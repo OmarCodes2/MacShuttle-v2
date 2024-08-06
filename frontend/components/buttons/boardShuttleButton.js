@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { TouchableOpacity, Text, StyleSheet } from 'react-native';
-import { colors } from '@/constants/styles/colors';
+import { colors } from '../../constants/styles/colors';
 
 const boardShuttleButton = ({ status, onPress }) => {
   const buttonColor = useMemo(
@@ -31,7 +31,7 @@ const styles = StyleSheet.create({
   },
   text: {
     color: colors.white,
-    fontFamily: 'Montserrat-Regular',
+    // fontFamily: 'Montserrat-Regular',
     textTransform: 'uppercase',
   },
 });

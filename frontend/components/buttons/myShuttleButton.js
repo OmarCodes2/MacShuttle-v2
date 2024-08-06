@@ -1,6 +1,6 @@
 import { TouchableOpacity, Text, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { colors } from '@/constants/styles/colors';
+import { colors } from '../../constants/styles/colors';
 
 const MyShuttleButton = ({ onPress }) => {
   return (
@@ -27,7 +27,7 @@ const styles = StyleSheet.create({
   },
   text: {
     color: colors.white,
-    fontFamily: 'Montserrat-Regular',
+    // fontFamily: 'Montserrat-Regular',
     textTransform: 'uppercase',
   },
 });

@@ -1,5 +1,5 @@
 import { View, Text, StyleSheet } from 'react-native';
-import { colors } from '@/constants/styles/colors';
+import { colors } from '../../constants/styles/colors';
 
 const BottomSheetTitle = ({ title, subtitle }) => {
   return (
@@ -21,11 +21,11 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 20,
     color: colors.white,
-    fontFamily: 'Montserrat-Medium',
+    // fontFamily: 'Montserrat-Medium',
   },
   subtitle: {
     fontSize: 12,
     color: colors.white,
-    fontFamily: 'Montserrat-Regular',
+    // fontFamily: 'Montserrat-Regular',
   },
 });
