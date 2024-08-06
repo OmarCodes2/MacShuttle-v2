@@ -21,7 +21,8 @@
     "react-native-maps": "^1.17.3",
     "react-native-web": "~0.19.10",
     "expo-location": "~17.0.1",
-    "react-native-svg": "15.2.0"
+    "react-native-svg": "15.2.0",
+    "@expo/vector-icons": "^14.0.2"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
