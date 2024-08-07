@@ -102,17 +102,22 @@ export default function App() {
       <Map />
       <BottomSheetWrapper>
         <BottomSheetTitle
-          title='Example Nearest Stop'
+          title='Nearest Stop: Student Centre'
           subtitle='Upcoming shuttles'
         />
         <BottomSheetBlock
-          leftText='Example Shuttle'
+          leftText='Shuttle Bus 1'
           rightText='1 min'
           clickable={true}
         />
         <BottomSheetBlock
-          leftText='Example Shuttle'
-          rightText='7 min'
+          leftText='Shuttle Bus 2'
+          rightText='Out of Order'
+          clickable={true}
+        />
+        <BottomSheetBlock
+          leftText='Shuttle Bus 3'
+          rightText='Out of Order'
           clickable={true}
         />
       </BottomSheetWrapper>
