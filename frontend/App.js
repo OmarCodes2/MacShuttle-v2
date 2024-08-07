@@ -37,64 +37,6 @@ export default function App() {
     };
   }, []);
 
-  const startTracking = async () => {
-    const retrieveID = `${process.env.EXPO_PUBLIC_API_URL}/startTracking`;
-    try {
-      const response = await axios.post(retrieveID);
-      console.log('Retrieved RunID:', response.data.run_id);
-      setRunID(response.data.run_id);
-    } catch (error) {
-      console.error('Error retrieving run ID:', error);
-      return;
-    }
-    await Tracking();
-  };
-
-  const Tracking = () => {
-    setTracking(true);
-    const initialTime = Date.now();
-    setStartTime(initialTime);
-    intervalRef.current = setInterval(async () => {
-      let currentLocation = await Location.getCurrentPositionAsync({});
-      setLocation(currentLocation);
-
-      const { latitude, longitude } = currentLocation.coords;
-      const timestamp = Date.now() - initialTime;
-
-      const endpointUrl = `${process.env.EXPO_PUBLIC_API_URL}/liveTracking`;
-      console.log(endpointUrl);
-      console.log('latitude is', latitude);
-
-      try {
-        console.log(directionRef.current);
-        await axios.post(endpointUrl, {
-          latitude,
-          longitude,
-          timestamp,
-          direction: directionRef.current,
-        });
-      } catch (error) {
-        console.error('Error sending location data:', error);
-      }
-    }, 500);
-  };
-
-  const stopTracking = () => {
-    setTracking(false);
-    if (intervalRef.current) {
-      clearInterval(intervalRef.current);
-      intervalRef.current = null;
-    }
-  };
-
-  const toggleDirection = () => {
-    setDirection((prevDirection) => {
-      const newDirection = prevDirection === 'forward' ? 'reverse' : 'forward';
-      directionRef.current = newDirection;
-      return newDirection;
-    });
-  };
-
   useEffect(() => {}, [direction]);
 
   return (
