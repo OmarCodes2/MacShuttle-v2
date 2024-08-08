@@ -1,25 +1,19 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Text, View, StyleSheet, TouchableOpacity } from 'react-native';
 import * as Location from 'expo-location';
-import axios from 'axios';
+import { Ionicons } from '@expo/vector-icons';
 import Map from './components/map/map';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import BottomSheetWrapper from './components/bottom-sheet/bottomSheetWrapper';
 import BottomSheetTitle from './components/bottom-sheet/bottomSheetTitle';
 import BottomSheetBlock from './components/bottom-sheet/bottomSheetBlock';
-import MyShuttleButton from './components/buttons/myShuttleButton';
-import BoardShuttleButton from './components/buttons/boardShuttleButton';
-import { useFonts } from 'expo-font';
 
 export default function App() {
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
-  const [tracking, setTracking] = useState(false);
-  const [direction, setDirection] = useState('forward');
-  const [startTime, setStartTime] = useState(null);
-  const [runID, setRunID] = useState(null);
-  const intervalRef = useRef(null);
-  const directionRef = useRef(direction);
+  const [busData, setBusData] = useState([]);
+  const [selectedShuttle, setSelectedShuttle] = useState(null);
+  const ws = useRef(null);
 
   useEffect(() => {
     (async () => {
@@ -30,38 +24,78 @@ export default function App() {
       }
     })();
 
+    ws.current = new WebSocket(process.env.EXPO_PUBLIC_WEBSOCKET_URL);
+
+    ws.current.onopen = () => {
+      console.log('WebSocket connection opened');
+      const message = JSON.stringify({ type: 'subscribe', content: 'bus_updates' });
+      ws.current.send(message);
+    };
+
+    ws.current.onmessage = (e) => {
+      const data = JSON.parse(e.data);
+      setBusData(data);
+    };
+
+    ws.current.onerror = (e) => {
+      console.error('WebSocket error: ', e.message);
+    };
+
+    ws.current.onclose = (e) => {
+      console.log('WebSocket connection closed: ', e.code, e.reason);
+    };
+
     return () => {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
+      if (ws.current) {
+        ws.current.close();
       }
     };
   }, []);
 
-  useEffect(() => {}, [direction]);
+  const handleShuttleSelect = (shuttle) => {
+    setSelectedShuttle(shuttle);
+  };
+
+  const handleBack = () => {
+    setSelectedShuttle(null);
+  };
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <Map />
+      <Map busData={busData} />
       <BottomSheetWrapper>
-        <BottomSheetTitle
-          title='Nearest Stop: Student Centre'
-          subtitle='Upcoming shuttles'
-        />
-        <BottomSheetBlock
-          leftText='Shuttle Bus 1'
-          rightText='1 min'
-          clickable={true}
-        />
-        <BottomSheetBlock
-          leftText='Shuttle Bus 2'
-          rightText='Out of Order'
-          clickable={true}
-        />
-        <BottomSheetBlock
-          leftText='Shuttle Bus 3'
-          rightText='Out of Order'
-          clickable={true}
-        />
+        {selectedShuttle ? (
+          <View>
+            <TouchableOpacity onPress={handleBack} style={styles.backButton}>
+              <Ionicons name="chevron-back" size={24} style={styles.icon} />
+            </TouchableOpacity>
+            <Text style={styles.stopText}>Student Centre Stop: {busData[1]} Minutes</Text>
+            <Text style={styles.stopText}>ABB Stop: {busData[0]} Minutes</Text>
+          </View>
+        ) : (
+          <>
+            <BottomSheetTitle
+              title="Nearest Stop: Student Centre"
+              subtitle="Upcoming shuttles"
+            />
+            <BottomSheetBlock
+              leftText="Shuttle Bus 1"
+              rightText={`${busData[1]} min`}
+              clickable={true}
+              onPress={() => handleShuttleSelect('Shuttle Bus 1')}
+            />
+            <BottomSheetBlock
+              leftText="Shuttle Bus 2"
+              rightText="Out of Order"
+              clickable={false}
+            />
+            <BottomSheetBlock
+              leftText="Shuttle Bus 3"
+              rightText="Out of Order"
+              clickable={false}
+            />
+          </>
+        )}
       </BottomSheetWrapper>
     </GestureHandlerRootView>
   );
@@ -98,5 +132,21 @@ const styles = StyleSheet.create({
   buttonText: {
     color: '#fff',
     fontSize: 16,
+  },
+  backButton: {
+    backgroundColor: 'transparent',
+    padding: 10,
+    borderRadius: 25,
+    marginBottom: 10,
+    alignItems: 'center',
+    flexDirection: 'row',
+  },
+  icon: {
+    color: '#fff',
+  },
+  stopText: {
+    fontSize: 24,
+    color: '#fff',
+    margin: 20,
   },
 });

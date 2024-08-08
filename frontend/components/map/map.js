@@ -5,7 +5,7 @@ import MapMarker from './marker';
 import { busStops } from '../../constants/map/location';
 import useRegion from './useRegion';
 
-const Map = () => {
+const Map = ({ busData }) => {
   const { region, handleRegionChangeComplete } = useRegion();
 
   return (
@@ -25,6 +25,13 @@ const Map = () => {
               longitude={busStop.longitude}
             />
           ))}
+          {busData.length > 0 && (
+            <MapMarker
+              latitude={busData[3]} // latitude of the bus
+              longitude={busData[2]} // longitude of the bus
+              type='moving'
+            />
+          )}
         </MapView>
       ) : (
         <ActivityIndicator size="large" />
