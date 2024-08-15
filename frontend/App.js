@@ -13,6 +13,7 @@ export default function App() {
   const [errorMsg, setErrorMsg] = useState(null);
   const [busData, setBusData] = useState([]);
   const [selectedShuttle, setSelectedShuttle] = useState(null);
+  const [attempt, setAttempt] = useState(1);
   const ws = useRef(null);
 
   useEffect(() => {
@@ -51,6 +52,34 @@ export default function App() {
       }
     };
   }, []);
+
+  useEffect(() => {
+    const interval = setInterval(async () => {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        setErrorMsg('Permission to access location was denied');
+        return;
+      }
+
+      let currentLocation = await Location.getCurrentPositionAsync({});
+      setLocation(currentLocation);
+
+      if (currentLocation) {
+        try {
+          const response = await fetch(
+            `http://macshuttle-v2.onrender.com/get-bus-location?lat=${currentLocation.coords.latitude}&lon=${currentLocation.coords.longitude}`
+          );
+          const data = await response.json();
+          console.log(`Attempt ${attempt}:`, data);
+          setAttempt(prevAttempt => prevAttempt + 1);
+        } catch (error) {
+          console.error('Error fetching bus location:', error);
+        }
+      }
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, [attempt]);
 
   const handleShuttleSelect = (shuttle) => {
     setSelectedShuttle(shuttle);
