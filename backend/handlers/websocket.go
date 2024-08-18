@@ -34,14 +34,14 @@ func WebSocketHandler(w http.ResponseWriter, r *http.Request) {
 		go func() {
 			for {
 				// Retrieve bus location
-				location, err := wialon.GetBusLocation()
+				location, err := wialon.GetBusData()
 				if err != nil {
 					log.Println("Error retrieving bus location:", err)
 					continue
 				}
 
 				// Calculate ETA
-				eta, err := eta.GetBusETA(location.Lat, location.Lon, "forward")
+				eta, err := eta.GetBusETA(location, "forward")
 				if err != nil {
 					log.Println("Error calculating ETA:", err)
 					continue
