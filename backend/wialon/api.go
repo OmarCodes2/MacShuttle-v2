@@ -11,13 +11,6 @@ import (
 	"github.com/joho/godotenv"
 )
 
-type Item struct {
-	ID int `json:"id"`
-}
-
-type TrackerSearchResponse struct {
-	Items []Item `json:"items"`
-}
 
 type BusData struct {
 	Id int `json:"id"`
@@ -70,14 +63,17 @@ func GetBusData() ([]BusData, error) {
 		return busesData, err
 	}
 
-	var trackerSearchResponse TrackerSearchResponse
+	var trackerSearchResponse map[string]interface{}
 	err = json.Unmarshal(body, &trackerSearchResponse)
 	if err != nil {
 		return busesData, err
 	}
 
-	for _, item := range trackerSearchResponse.Items {
-		busIDs = append(busIDs, item.ID)
+	items := trackerSearchResponse["items"].([]interface{})
+	for _, item := range items {
+		itemMap := item.(map[string]interface{}) // Assert the type of each item to map[string]interface{}
+		busID := int(itemMap["id"].(float64))    // Convert the id to int (it's stored as float64 in the interface{} type)
+		busIDs = append(busIDs, busID)
 	}
 
 	// Step 3: Get all the bus locations using the session ID & tracker IDs
@@ -110,6 +106,6 @@ func GetBusData() ([]BusData, error) {
 
 		busesData = append(busesData, busdata)
 	}
-	
+
 	return busesData, nil
 }
