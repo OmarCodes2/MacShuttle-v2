@@ -2,7 +2,11 @@ package eta
 
 import (
 	"errors"
+	"log"
 	"math"
+	"time"
+
+	"github.com/OmarCodes2/MacShuttle-v2/wialon"
 )
 
 type StopInfo struct {
@@ -10,6 +14,14 @@ type StopInfo struct {
 	Latitude  float64
 	Direction string
 	TimeStamp int // in milliseconds
+}
+
+// ETAResult holds the ETA calculation result.
+type ETAResult struct {
+	TrackerID  int        `json:"tracker_id"`
+	ETAs       [2]float64 `json:"etas"`
+	Coordinates [2]float64 `json:"coordinates"`
+	MinutesAgo float64    `json:"minutes_ago"`
 }
 
 const (
@@ -54,6 +66,21 @@ func Haversine(lat1, lon1, lat2, lon2 float64) float64 {
 	return distance // Distance in kilometers
 }
 
+func GetLastLocationAge(TimeStamp float64) (float64, error){
+	// Current time in UNIX timestamp (seconds since January 1, 1970)
+    currentTime := time.Now().Unix()
+	// The timestamp received from Wialon API
+    reportedTime := int64(TimeStamp)
+	// Calculate the difference in seconds
+	timeDifference := currentTime - reportedTime
+	// Convert the difference to minutes
+	minutesAgo := timeDifference / 60
+	if minutesAgo < 0{
+		return float64(minutesAgo), errors.New("unable to calculate location age in GetLastLocationAge()")
+	}
+	return float64(minutesAgo), nil
+}
+
 func GetClosestStop(lat, lon float64, direction string) (StopInfo, error) {
 	var closestStop StopInfo
 	var minDistance float64
@@ -76,7 +103,7 @@ func GetClosestStop(lat, lon float64, direction string) (StopInfo, error) {
 	return closestStop, nil
 }
 
-func CalculateETA(referenceCoords StopInfo) ([]float64, error) {
+func CalculateETA(busID int, referenceCoords StopInfo, minutesAgo float64) (ETAResult, error) {
 	const (
 		millisInMinute = 60000 // 60,000 milliseconds in a minute for conversion
 	)
@@ -96,25 +123,43 @@ func CalculateETA(referenceCoords StopInfo) ([]float64, error) {
 	ETAStopB = ETAStopB / millisInMinute
 
 	if ETAStopA < 0 || ETAStopB < 0 {
-		return nil, errors.New("failed to calculate ETA in CalculateETA()")
+		return ETAResult{}, errors.New("failed to calculate ETA in CalculateETA()")
 	}
 
-	ETAs := []float64{ETAStopA, ETAStopB, referenceCoords.Longitude, referenceCoords.Latitude}
-	return ETAs, nil
+	// Create the result struct
+	ETAResult := ETAResult{
+		TrackerID:  busID,
+		ETAs:       [2]float64{ETAStopA, ETAStopB},
+		Coordinates: [2]float64{referenceCoords.Longitude, referenceCoords.Latitude},
+		MinutesAgo: minutesAgo,
+	}
+
+	return ETAResult, nil
 }
 
-func GetBusETA(lat, lon float64, direction string) ([]float64, error) {
-	// Get closest reference stop to bus ETA
-	closestStop, err := GetClosestStop(lat, lon, direction)
-	if err != nil {
-		return nil, err
-	}
+func GetBusETA(busesData []wialon.BusData, direction string) ([]ETAResult, error) {
+	var busesETAs []ETAResult
+	// Loop through the each bus to calculate the closest stop
+	for _, busData := range busesData{
+		// Get closest reference stop to bus ETA
+		closestStop, err := GetClosestStop(busData.Lat, busData.Lon, direction)
+		if err != nil {
+			return nil, err
+		}
 
-	// Calculate ETA to each of the stops
-	ETAs, err := CalculateETA(closestStop)
-	if err != nil {
-		return nil, err
-	}
+		// Calculate duration since location has been updated
+		minutesAgo, err := GetLastLocationAge(busData.TimeStamp)
+		if err != nil {
+			return nil, err
+		}
 
-	return ETAs, nil
+		// Calculate ETA to each of the stops
+		busETAs, err := CalculateETA(busData.Id, closestStop, minutesAgo)
+		if err != nil {
+			return nil, err
+		}
+		// Append all bus etas into our variable
+		busesETAs = append(busesETAs, busETAs)
+	}
+	return busesETAs, nil
 }
