@@ -94,7 +94,7 @@ export default function App() {
         busDataList={[
           ["Shuttle 1", 3],
           ["Shuttle 2", 18],
-          ["Shuttle 3", 21],
+          ["Shuttle 3", 21], // temporary
         ]}
       />
     ) : (
@@ -107,7 +107,7 @@ export default function App() {
           stopsData={[
             ["Stop 1", 4],
             ["Stop 2", 16],
-            ["Stop 3", 17],
+            ["Stop 3", 17], // temporary
           ]}
         />
       </>
