@@ -1,10 +1,12 @@
+import { BOARDED, NOT_BOARDED } from "../constants/shuttles/statuses"
 import BottomSheetBlock from "./bottom-sheet/bottomSheetBlock"
 import BottomSheetTitle from "./bottom-sheet/bottomSheetTitle"
 import BottomSheetWrapper from "./bottom-sheet/bottomSheetWrapper"
 import BoardShuttleButton from "./buttons/boardShuttleButton"
+import CloseButton from "./buttons/closeButton"
 
 const UpcomingStopsSheet = ({
-  handleExit,
+  handleClose,
   handleBoard,
   selectedShuttle,
   boardedShuttle,
@@ -12,12 +14,13 @@ const UpcomingStopsSheet = ({
 }) => {
   return (
     <BottomSheetWrapper>
+      <CloseButton onPress={handleClose} />
       <BottomSheetTitle
-        title={`Shuttle: ${selectedShuttle}`}
+        title={`${selectedShuttle}`}
         subtitle="Upcoming stops"
       />
       <BoardShuttleButton
-        status={boardedShuttle === selectedShuttle}
+        status={boardedShuttle === selectedShuttle ? BOARDED : NOT_BOARDED}
         onPress={handleBoard}
       />
       {stopsData.map((stopsData) => {
@@ -26,8 +29,6 @@ const UpcomingStopsSheet = ({
             key={stopsData[0]}
             leftText={stopsData[0]}
             rightText={`${stopsData[1]} min`}
-            clickable={true}
-            onPress={() => handleShuttleSelect(stopsData[0])}
           />
         )
       })}

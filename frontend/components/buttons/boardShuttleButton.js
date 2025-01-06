@@ -1,15 +1,16 @@
 import { useMemo } from "react"
 import { TouchableOpacity, Text, StyleSheet } from "react-native"
 import { colors } from "../../constants/styles/colors"
+import { BOARDED } from "../../constants/shuttles/statuses"
 
 const BoardShuttleButton = ({ status, onPress }) => {
   const buttonColor = useMemo(
-    () => (status === "board" ? colors.green : colors.red),
+    () => (status === BOARDED ? colors.red : colors.green),
     [status]
   )
 
   const buttonText = useMemo(
-    () => (status === "board" ? "Board" : "Disembark"),
+    () => (status === BOARDED ? "Disembark" : "Board"),
     [status]
   )
 
@@ -25,6 +26,7 @@ const BoardShuttleButton = ({ status, onPress }) => {
 
 const styles = StyleSheet.create({
   button: {
+    marginVertical: 16,
     padding: 16,
     borderRadius: 8,
     alignItems: "center",

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react"
+import React, { useState, useEffect, useRef, useMemo } from "react"
 import { Text, View, StyleSheet, TouchableOpacity } from "react-native"
 import * as Location from "expo-location"
 import { Ionicons } from "@expo/vector-icons"
@@ -8,6 +8,7 @@ import BottomSheetWrapper from "./components/bottom-sheet/bottomSheetWrapper"
 import BottomSheetTitle from "./components/bottom-sheet/bottomSheetTitle"
 import BottomSheetBlock from "./components/bottom-sheet/bottomSheetBlock"
 import UpcomingShuttlesSheet from "./components/upcomingShuttles"
+import UpcomingStopsSheet from "./components/upcomingStops"
 
 export default function App() {
   const [location, setLocation] = useState(null)
@@ -56,19 +57,19 @@ export default function App() {
     }
   }, [])
 
-  const handleShuttleSelect = (shuttle) => {
+  const handleOpenShuttle = (shuttle) => {
     setSelectedShuttle(shuttle)
+    console.log(selectedShuttle)
   }
 
-  const handleBack = () => {
+  const handleCloseShuttle = () => {
     setSelectedShuttle(null)
   }
 
-  return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
-      <Map busData={busData} />
+  const renderBottomSheet = useMemo(() => {
+    return !selectedShuttle ? (
       <UpcomingShuttlesSheet
-        handleShuttleSelect={handleShuttleSelect}
+        handleOpenShuttle={handleOpenShuttle}
         nearestStop={"MUSC"}
         busDataList={[
           ["Shuttle 1", 3],
@@ -76,90 +77,75 @@ export default function App() {
           ["Shuttle 3", 21],
         ]}
       />
-      {/* <BottomSheetWrapper>
-        {selectedShuttle ? (
-          <View>
-            <TouchableOpacity onPress={handleBack} style={styles.backButton}>
-              <Ionicons name="chevron-back" size={24} style={styles.icon} />
-            </TouchableOpacity>
-            <Text style={styles.stopText}>Student Centre Stop: {busData[1]} Minutes</Text>
-            <Text style={styles.stopText}>ABB Stop: {busData[0]} Minutes</Text>
-          </View>
-        ) : (
-          <>
-            <BottomSheetTitle
-              title="Nearest Stop: Student Centre"
-              subtitle="Upcoming shuttles"
-            />
-            <BottomSheetBlock
-              leftText="Shuttle Bus 1"
-              rightText={`${busData[1]} min`}
-              clickable={true}
-              onPress={() => handleShuttleSelect('Shuttle Bus 1')}
-            />
-            <BottomSheetBlock
-              leftText="Shuttle Bus 2"
-              rightText="Out of Order"
-              clickable={false}
-            />
-            <BottomSheetBlock
-              leftText="Shuttle Bus 3"
-              rightText="Out of Order"
-              clickable={false}
-            />
-          </>
-        )}
-      </BottomSheetWrapper> */}
+    ) : (
+      <UpcomingStopsSheet
+        handleClose={handleCloseShuttle}
+        handleBoard={() => {}}
+        selectedShuttle={selectedShuttle}
+        boardedShuttle={null}
+        stopsData={[
+          ["Stop 1", 4],
+          ["Stop 2", 16],
+          ["Stop 3", 17],
+        ]}
+      />
+    )
+  }, [selectedShuttle])
+
+  return (
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <Map busData={busData} />
+      {renderBottomSheet}
     </GestureHandlerRootView>
   )
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#fff",
-  },
-  text: {
-    fontSize: 24,
-    color: "#000",
-    margin: 20,
-  },
-  error: {
-    fontSize: 18,
-    color: "red",
-    margin: 10,
-  },
-  button: {
-    backgroundColor: "#007bff",
-    padding: 15,
-    borderRadius: 25,
-    margin: 10,
-    width: "80%",
-    alignItems: "center",
-  },
-  startStopButton: {
-    marginTop: 30,
-  },
-  buttonText: {
-    color: "#fff",
-    fontSize: 16,
-  },
-  backButton: {
-    backgroundColor: "transparent",
-    padding: 10,
-    borderRadius: 25,
-    marginBottom: 10,
-    alignItems: "center",
-    flexDirection: "row",
-  },
-  icon: {
-    color: "#fff",
-  },
-  stopText: {
-    fontSize: 24,
-    color: "#fff",
-    margin: 20,
-  },
-})
+// const styles = StyleSheet.create({
+//   container: {
+//     flex: 1,
+//     justifyContent: "center",
+//     alignItems: "center",
+//     backgroundColor: "#fff",
+//   },
+//   text: {
+//     fontSize: 24,
+//     color: "#000",
+//     margin: 20,
+//   },
+//   error: {
+//     fontSize: 18,
+//     color: "red",
+//     margin: 10,
+//   },
+//   button: {
+//     backgroundColor: "#007bff",
+//     padding: 15,
+//     borderRadius: 25,
+//     margin: 10,
+//     width: "80%",
+//     alignItems: "center",
+//   },
+//   startStopButton: {
+//     marginTop: 30,
+//   },
+//   buttonText: {
+//     color: "#fff",
+//     fontSize: 16,
+//   },
+//   backButton: {
+//     backgroundColor: "transparent",
+//     padding: 10,
+//     borderRadius: 25,
+//     marginBottom: 10,
+//     alignItems: "center",
+//     flexDirection: "row",
+//   },
+//   icon: {
+//     color: "#fff",
+//   },
+//   stopText: {
+//     fontSize: 24,
+//     color: "#fff",
+//     margin: 20,
+//   },
+// })

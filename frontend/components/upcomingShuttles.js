@@ -3,7 +3,7 @@ import BottomSheetTitle from "./bottom-sheet/bottomSheetTitle"
 import BottomSheetWrapper from "./bottom-sheet/bottomSheetWrapper"
 
 const UpcomingShuttlesSheet = ({
-  handleShuttleSelect,
+  handleOpenShuttle,
   nearestStop,
   busDataList,
 }) => {
@@ -20,7 +20,7 @@ const UpcomingShuttlesSheet = ({
             leftText={busData[0]}
             rightText={`${busData[1]} min`}
             clickable={true}
-            onPress={() => handleShuttleSelect(busData[0])}
+            onPress={() => handleOpenShuttle(busData[0])}
           />
         )
       })}
