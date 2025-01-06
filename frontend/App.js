@@ -58,7 +58,7 @@ export default function App() {
   }, [])
 
   const getNearestStop = () => {
-    return busStops[0] // temporary
+    return busStops[0].stop // temporary
   }
 
   const handleSelectStop = (stop) => {
