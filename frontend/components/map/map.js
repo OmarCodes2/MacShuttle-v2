@@ -5,7 +5,7 @@ import MapMarker from "./marker"
 import { busStops } from "../../constants/map/location"
 import useRegion from "./useRegion"
 
-const Map = ({ busData }) => {
+const Map = ({ busData, handleSelectStop }) => {
   const { region, handleRegionChangeComplete } = useRegion()
 
   return (
@@ -23,6 +23,7 @@ const Map = ({ busData }) => {
               key={busStop.stop}
               latitude={busStop.latitude}
               longitude={busStop.longitude}
+              onPress={() => handleSelectStop(busStop.stop)}
             />
           ))}
           {busData.length > 0 && (

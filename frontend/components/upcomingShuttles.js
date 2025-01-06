@@ -12,7 +12,7 @@ const UpcomingShuttlesSheet = ({
   return (
     <BottomSheetWrapper>
       <BottomSheetTitle
-        title={`Nearest Stop: ${stop}`}
+        title={`Stop: ${stop}`}
         subtitle="Upcoming shuttles"
         ButtonComponent={() => <ViewStopButton onPress={handleViewStop} />}
       />

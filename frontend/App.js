@@ -6,11 +6,13 @@ import UpcomingShuttlesSheet from "./components/upcomingShuttles"
 import UpcomingStopsSheet from "./components/upcomingStops"
 import CloseButton from "./components/buttons/closeButton"
 import MyShuttleButton from "./components/buttons/myShuttleButton"
+import { busStops } from "./constants/map/location"
 
 export default function App() {
   const [location, setLocation] = useState(null)
   const [errorMsg, setErrorMsg] = useState(null)
   const [busData, setBusData] = useState([])
+  const [selectedStop, setSelectedStop] = useState(null)
   const [selectedShuttle, setSelectedShuttle] = useState(null)
   const [boardedShuttle, setBoardedShuttle] = useState(null)
   const ws = useRef(null)
@@ -55,6 +57,14 @@ export default function App() {
     }
   }, [])
 
+  const getNearestStop = () => {
+    return busStops[0] // temporary
+  }
+
+  const handleSelectStop = (stop) => {
+    setSelectedStop(selectedStop === stop ? null : stop)
+  }
+
   const handleBoardShuttle = (shuttle) => {
     setBoardedShuttle(boardedShuttle === shuttle ? null : shuttle)
   }
@@ -80,7 +90,7 @@ export default function App() {
     return !selectedShuttle ? (
       <UpcomingShuttlesSheet
         handleOpenShuttle={handleOpenShuttle}
-        stop={"MUSC"}
+        stop={selectedStop || getNearestStop()}
         busDataList={[
           ["Shuttle 1", 3],
           ["Shuttle 2", 18],
@@ -102,11 +112,11 @@ export default function App() {
         />
       </>
     )
-  }, [selectedShuttle, boardedShuttle])
+  }, [selectedStop, selectedShuttle, boardedShuttle])
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <Map busData={busData} />
+      <Map busData={busData} handleSelectStop={handleSelectStop} />
       {renderBoardedShuttle}
       {renderBottomSheet}
     </GestureHandlerRootView>
