@@ -1,69 +1,82 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Text, View, StyleSheet, TouchableOpacity } from 'react-native';
-import * as Location from 'expo-location';
-import { Ionicons } from '@expo/vector-icons';
-import Map from './components/map/map';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import BottomSheetWrapper from './components/bottom-sheet/bottomSheetWrapper';
-import BottomSheetTitle from './components/bottom-sheet/bottomSheetTitle';
-import BottomSheetBlock from './components/bottom-sheet/bottomSheetBlock';
+import React, { useState, useEffect, useRef } from "react"
+import { Text, View, StyleSheet, TouchableOpacity } from "react-native"
+import * as Location from "expo-location"
+import { Ionicons } from "@expo/vector-icons"
+import Map from "./components/map/map"
+import { GestureHandlerRootView } from "react-native-gesture-handler"
+import BottomSheetWrapper from "./components/bottom-sheet/bottomSheetWrapper"
+import BottomSheetTitle from "./components/bottom-sheet/bottomSheetTitle"
+import BottomSheetBlock from "./components/bottom-sheet/bottomSheetBlock"
+import UpcomingShuttlesSheet from "./components/upcomingShuttles"
 
 export default function App() {
-  const [location, setLocation] = useState(null);
-  const [errorMsg, setErrorMsg] = useState(null);
-  const [busData, setBusData] = useState([]);
-  const [selectedShuttle, setSelectedShuttle] = useState(null);
-  const ws = useRef(null);
+  const [location, setLocation] = useState(null)
+  const [errorMsg, setErrorMsg] = useState(null)
+  const [busData, setBusData] = useState([])
+  const [selectedShuttle, setSelectedShuttle] = useState(null)
+  const ws = useRef(null)
 
   useEffect(() => {
-    (async () => {
-      let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== 'granted') {
-        setErrorMsg('Permission to access location was denied');
-        return;
+    ;(async () => {
+      let { status } = await Location.requestForegroundPermissionsAsync()
+      if (status !== "granted") {
+        setErrorMsg("Permission to access location was denied")
+        return
       }
-    })();
+    })()
 
-    ws.current = new WebSocket(process.env.EXPO_PUBLIC_WEBSOCKET_URL);
+    ws.current = new WebSocket(process.env.EXPO_PUBLIC_WEBSOCKET_URL)
 
     ws.current.onopen = () => {
-      console.log('WebSocket connection opened');
-      const message = JSON.stringify({ type: 'subscribe', content: 'bus_updates' });
-      ws.current.send(message);
-    };
+      console.log("WebSocket connection opened")
+      const message = JSON.stringify({
+        type: "subscribe",
+        content: "bus_updates",
+      })
+      ws.current.send(message)
+    }
 
     ws.current.onmessage = (e) => {
-      const data = JSON.parse(e.data);
-      setBusData(data);
-    };
+      const data = JSON.parse(e.data)
+      setBusData(data)
+    }
 
     ws.current.onerror = (e) => {
-      console.error('WebSocket error: ', e.message);
-    };
+      console.error("WebSocket error: ", e.message)
+    }
 
     ws.current.onclose = (e) => {
-      console.log('WebSocket connection closed: ', e.code, e.reason);
-    };
+      console.log("WebSocket connection closed: ", e.code, e.reason)
+    }
 
     return () => {
       if (ws.current) {
-        ws.current.close();
+        ws.current.close()
       }
-    };
-  }, []);
+    }
+  }, [])
 
   const handleShuttleSelect = (shuttle) => {
-    setSelectedShuttle(shuttle);
-  };
+    setSelectedShuttle(shuttle)
+  }
 
   const handleBack = () => {
-    setSelectedShuttle(null);
-  };
+    setSelectedShuttle(null)
+  }
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <Map busData={busData} />
-      <BottomSheetWrapper>
+      <UpcomingShuttlesSheet
+        handleShuttleSelect={handleShuttleSelect}
+        nearestStop={"MUSC"}
+        busDataList={[
+          ["Shuttle 1", 3],
+          ["Shuttle 2", 18],
+          ["Shuttle 3", 21],
+        ]}
+      />
+      {/* <BottomSheetWrapper>
         {selectedShuttle ? (
           <View>
             <TouchableOpacity onPress={handleBack} style={styles.backButton}>
@@ -96,57 +109,57 @@ export default function App() {
             />
           </>
         )}
-      </BottomSheetWrapper>
+      </BottomSheetWrapper> */}
     </GestureHandlerRootView>
-  );
+  )
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#fff',
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#fff",
   },
   text: {
     fontSize: 24,
-    color: '#000',
+    color: "#000",
     margin: 20,
   },
   error: {
     fontSize: 18,
-    color: 'red',
+    color: "red",
     margin: 10,
   },
   button: {
-    backgroundColor: '#007bff',
+    backgroundColor: "#007bff",
     padding: 15,
     borderRadius: 25,
     margin: 10,
-    width: '80%',
-    alignItems: 'center',
+    width: "80%",
+    alignItems: "center",
   },
   startStopButton: {
     marginTop: 30,
   },
   buttonText: {
-    color: '#fff',
+    color: "#fff",
     fontSize: 16,
   },
   backButton: {
-    backgroundColor: 'transparent',
+    backgroundColor: "transparent",
     padding: 10,
     borderRadius: 25,
     marginBottom: 10,
-    alignItems: 'center',
-    flexDirection: 'row',
+    alignItems: "center",
+    flexDirection: "row",
   },
   icon: {
-    color: '#fff',
+    color: "#fff",
   },
   stopText: {
     fontSize: 24,
-    color: '#fff',
+    color: "#fff",
     margin: 20,
   },
-});
+})
