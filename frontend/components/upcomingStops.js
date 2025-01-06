@@ -15,10 +15,12 @@ const UpcomingStopsSheet = ({
       <BottomSheetTitle
         title={`${selectedShuttle}`}
         subtitle="Upcoming stops"
-      />
-      <BoardShuttleButton
-        status={boardedShuttle === selectedShuttle ? BOARDED : NOT_BOARDED}
-        onPress={() => handleBoard(selectedShuttle)}
+        ButtonComponent={() => (
+          <BoardShuttleButton
+            status={boardedShuttle === selectedShuttle ? BOARDED : NOT_BOARDED}
+            onPress={() => handleBoard(selectedShuttle)}
+          />
+        )}
       />
       {stopsData.map((stopsData) => {
         return (

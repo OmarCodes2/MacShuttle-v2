@@ -1,21 +1,29 @@
-import { View, Text, StyleSheet } from 'react-native';
-import { colors } from '../../constants/styles/colors';
+import { View, Text, StyleSheet } from "react-native"
+import { colors } from "../../constants/styles/colors"
 
-const BottomSheetTitle = ({ title, subtitle }) => {
+const BottomSheetTitle = ({ title, subtitle, ButtonComponent }) => {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>{title}</Text>
-      <Text style={styles.subtitle}>{subtitle}</Text>
+      <View style={styles.text}>
+        <Text style={styles.title}>{title}</Text>
+        <Text style={styles.subtitle}>{subtitle}</Text>
+      </View>
+      {ButtonComponent != null && <ButtonComponent />}
     </View>
-  );
-};
+  )
+}
 
-export default BottomSheetTitle;
+export default BottomSheetTitle
 
 const styles = StyleSheet.create({
   container: {
-    display: 'flex',
-    flexDirection: 'column',
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  text: {
+    display: "flex",
+    flexDirection: "column",
     gap: 2,
   },
   title: {
@@ -28,4 +36,4 @@ const styles = StyleSheet.create({
     color: colors.white,
     // fontFamily: 'Montserrat-Regular',
   },
-});
+})

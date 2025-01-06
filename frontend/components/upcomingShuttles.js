@@ -1,13 +1,20 @@
 import BottomSheetBlock from "./bottom-sheet/bottomSheetBlock"
 import BottomSheetTitle from "./bottom-sheet/bottomSheetTitle"
 import BottomSheetWrapper from "./bottom-sheet/bottomSheetWrapper"
+import ViewStopButton from "./buttons/viewStopButton"
 
-const UpcomingShuttlesSheet = ({ handleOpenShuttle, stop, busDataList }) => {
+const UpcomingShuttlesSheet = ({
+  handleOpenShuttle,
+  handleViewStop,
+  stop,
+  busDataList,
+}) => {
   return (
     <BottomSheetWrapper>
       <BottomSheetTitle
         title={`Nearest Stop: ${stop}`}
         subtitle="Upcoming shuttles"
+        ButtonComponent={() => <ViewStopButton onPress={handleViewStop} />}
       />
       {busDataList.map((busData) => {
         return (

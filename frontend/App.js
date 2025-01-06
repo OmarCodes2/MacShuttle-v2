@@ -68,13 +68,13 @@ export default function App() {
   }
 
   const renderBoardedShuttle = useMemo(() => {
-    console.log("UMMM BOARDED SHUTTLE IS " + boardedShuttle)
     return (
+      !selectedShuttle &&
       boardedShuttle && (
         <MyShuttleButton onPress={() => handleOpenShuttle(boardedShuttle)} />
       )
     )
-  }, [boardedShuttle])
+  }, [selectedShuttle, boardedShuttle])
 
   const renderBottomSheet = useMemo(() => {
     return !selectedShuttle ? (

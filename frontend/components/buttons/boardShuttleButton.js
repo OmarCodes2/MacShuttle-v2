@@ -26,8 +26,7 @@ const BoardShuttleButton = ({ status, onPress }) => {
 
 const styles = StyleSheet.create({
   button: {
-    marginVertical: 16,
-    padding: 16,
+    padding: 12,
     borderRadius: 8,
     alignItems: "center",
   },

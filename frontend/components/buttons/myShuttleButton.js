@@ -1,19 +1,17 @@
 import { TouchableOpacity, Text, StyleSheet } from "react-native"
-import { Ionicons } from "@expo/vector-icons"
 import { colors } from "../../constants/styles/colors"
 
 const MyShuttleButton = ({ onPress }) => {
   return (
     <TouchableOpacity style={styles.button} onPress={onPress}>
-      <Text style={styles.text}>My Shuttle</Text>
-      <Ionicons name="chevron-forward" size={16} style={styles.icon} />
+      <Text style={styles.text}>My Current Shuttle</Text>
     </TouchableOpacity>
   )
 }
 
 const styles = StyleSheet.create({
   button: {
-    padding: 16,
+    padding: 12,
     borderRadius: 8,
     alignItems: "center",
     justifyContent: "center",
@@ -23,7 +21,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.green,
     position: "absolute",
     top: 48,
-    left: 16,
+    alignSelf: "center",
   },
   icon: {
     color: colors.white,
