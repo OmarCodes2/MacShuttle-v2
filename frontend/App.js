@@ -1,20 +1,17 @@
 import React, { useState, useEffect, useRef, useMemo } from "react"
-import { Text, View, StyleSheet, TouchableOpacity } from "react-native"
 import * as Location from "expo-location"
-import { Ionicons } from "@expo/vector-icons"
 import Map from "./components/map/map"
 import { GestureHandlerRootView } from "react-native-gesture-handler"
-import BottomSheetWrapper from "./components/bottom-sheet/bottomSheetWrapper"
-import BottomSheetTitle from "./components/bottom-sheet/bottomSheetTitle"
-import BottomSheetBlock from "./components/bottom-sheet/bottomSheetBlock"
 import UpcomingShuttlesSheet from "./components/upcomingShuttles"
 import UpcomingStopsSheet from "./components/upcomingStops"
+import CloseButton from "./components/buttons/closeButton"
 
 export default function App() {
   const [location, setLocation] = useState(null)
   const [errorMsg, setErrorMsg] = useState(null)
   const [busData, setBusData] = useState([])
   const [selectedShuttle, setSelectedShuttle] = useState(null)
+  const [boardedShuttle, setBoardedShuttle] = useState(null)
   const ws = useRef(null)
 
   useEffect(() => {
@@ -57,9 +54,12 @@ export default function App() {
     }
   }, [])
 
+  const handleBoardShuttle = (shuttle) => {
+    setBoardedShuttle(shuttle)
+  }
+
   const handleOpenShuttle = (shuttle) => {
     setSelectedShuttle(shuttle)
-    console.log(selectedShuttle)
   }
 
   const handleCloseShuttle = () => {
@@ -78,19 +78,21 @@ export default function App() {
         ]}
       />
     ) : (
-      <UpcomingStopsSheet
-        handleClose={handleCloseShuttle}
-        handleBoard={() => {}}
-        selectedShuttle={selectedShuttle}
-        boardedShuttle={null}
-        stopsData={[
-          ["Stop 1", 4],
-          ["Stop 2", 16],
-          ["Stop 3", 17],
-        ]}
-      />
+      <>
+        <CloseButton onPress={handleCloseShuttle} />
+        <UpcomingStopsSheet
+          handleBoard={handleBoardShuttle}
+          selectedShuttle={selectedShuttle}
+          boardedShuttle={boardedShuttle}
+          stopsData={[
+            ["Stop 1", 4],
+            ["Stop 2", 16],
+            ["Stop 3", 17],
+          ]}
+        />
+      </>
     )
-  }, [selectedShuttle])
+  }, [selectedShuttle, boardedShuttle])
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
@@ -99,53 +101,3 @@ export default function App() {
     </GestureHandlerRootView>
   )
 }
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     justifyContent: "center",
-//     alignItems: "center",
-//     backgroundColor: "#fff",
-//   },
-//   text: {
-//     fontSize: 24,
-//     color: "#000",
-//     margin: 20,
-//   },
-//   error: {
-//     fontSize: 18,
-//     color: "red",
-//     margin: 10,
-//   },
-//   button: {
-//     backgroundColor: "#007bff",
-//     padding: 15,
-//     borderRadius: 25,
-//     margin: 10,
-//     width: "80%",
-//     alignItems: "center",
-//   },
-//   startStopButton: {
-//     marginTop: 30,
-//   },
-//   buttonText: {
-//     color: "#fff",
-//     fontSize: 16,
-//   },
-//   backButton: {
-//     backgroundColor: "transparent",
-//     padding: 10,
-//     borderRadius: 25,
-//     marginBottom: 10,
-//     alignItems: "center",
-//     flexDirection: "row",
-//   },
-//   icon: {
-//     color: "#fff",
-//   },
-//   stopText: {
-//     fontSize: 24,
-//     color: "#fff",
-//     margin: 20,
-//   },
-// })

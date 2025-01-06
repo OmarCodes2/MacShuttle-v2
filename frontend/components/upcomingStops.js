@@ -3,10 +3,8 @@ import BottomSheetBlock from "./bottom-sheet/bottomSheetBlock"
 import BottomSheetTitle from "./bottom-sheet/bottomSheetTitle"
 import BottomSheetWrapper from "./bottom-sheet/bottomSheetWrapper"
 import BoardShuttleButton from "./buttons/boardShuttleButton"
-import CloseButton from "./buttons/closeButton"
 
 const UpcomingStopsSheet = ({
-  handleClose,
   handleBoard,
   selectedShuttle,
   boardedShuttle,
@@ -14,7 +12,6 @@ const UpcomingStopsSheet = ({
 }) => {
   return (
     <BottomSheetWrapper>
-      <CloseButton onPress={handleClose} />
       <BottomSheetTitle
         title={`${selectedShuttle}`}
         subtitle="Upcoming stops"
