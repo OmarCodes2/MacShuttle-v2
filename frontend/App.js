@@ -5,6 +5,7 @@ import { GestureHandlerRootView } from "react-native-gesture-handler"
 import UpcomingShuttlesSheet from "./components/upcomingShuttles"
 import UpcomingStopsSheet from "./components/upcomingStops"
 import CloseButton from "./components/buttons/closeButton"
+import MyShuttleButton from "./components/buttons/myShuttleButton"
 
 export default function App() {
   const [location, setLocation] = useState(null)
@@ -55,7 +56,7 @@ export default function App() {
   }, [])
 
   const handleBoardShuttle = (shuttle) => {
-    setBoardedShuttle(shuttle)
+    setBoardedShuttle(boardedShuttle === shuttle ? null : shuttle)
   }
 
   const handleOpenShuttle = (shuttle) => {
@@ -66,11 +67,20 @@ export default function App() {
     setSelectedShuttle(null)
   }
 
+  const renderBoardedShuttle = useMemo(() => {
+    console.log("UMMM BOARDED SHUTTLE IS " + boardedShuttle)
+    return (
+      boardedShuttle && (
+        <MyShuttleButton onPress={() => handleOpenShuttle(boardedShuttle)} />
+      )
+    )
+  }, [boardedShuttle])
+
   const renderBottomSheet = useMemo(() => {
     return !selectedShuttle ? (
       <UpcomingShuttlesSheet
         handleOpenShuttle={handleOpenShuttle}
-        nearestStop={"MUSC"}
+        stop={"MUSC"}
         busDataList={[
           ["Shuttle 1", 3],
           ["Shuttle 2", 18],
@@ -97,6 +107,7 @@ export default function App() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <Map busData={busData} />
+      {renderBoardedShuttle}
       {renderBottomSheet}
     </GestureHandlerRootView>
   )

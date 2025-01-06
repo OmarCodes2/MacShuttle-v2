@@ -2,15 +2,11 @@ import BottomSheetBlock from "./bottom-sheet/bottomSheetBlock"
 import BottomSheetTitle from "./bottom-sheet/bottomSheetTitle"
 import BottomSheetWrapper from "./bottom-sheet/bottomSheetWrapper"
 
-const UpcomingShuttlesSheet = ({
-  handleOpenShuttle,
-  nearestStop,
-  busDataList,
-}) => {
+const UpcomingShuttlesSheet = ({ handleOpenShuttle, stop, busDataList }) => {
   return (
     <BottomSheetWrapper>
       <BottomSheetTitle
-        title={`Nearest Stop: ${nearestStop}`}
+        title={`Nearest Stop: ${stop}`}
         subtitle="Upcoming shuttles"
       />
       {busDataList.map((busData) => {

@@ -18,7 +18,7 @@ const UpcomingStopsSheet = ({
       />
       <BoardShuttleButton
         status={boardedShuttle === selectedShuttle ? BOARDED : NOT_BOARDED}
-        onPress={handleBoard}
+        onPress={() => handleBoard(selectedShuttle)}
       />
       {stopsData.map((stopsData) => {
         return (
