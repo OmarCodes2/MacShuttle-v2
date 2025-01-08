@@ -2,7 +2,6 @@ package eta
 
 import (
 	"errors"
-	"log"
 	"math"
 	"time"
 
@@ -18,10 +17,10 @@ type StopInfo struct {
 
 // ETAResult holds the ETA calculation result.
 type ETAResult struct {
-	TrackerID  int        `json:"tracker_id"`
-	ETAs       [2]float64 `json:"etas"`
+	TrackerID   int        `json:"tracker_id"`
+	ETAs        [2]float64 `json:"etas"`
 	Coordinates [2]float64 `json:"coordinates"`
-	MinutesAgo float64    `json:"minutes_ago"`
+	MinutesAgo  float64    `json:"minutes_ago"`
 }
 
 const (
@@ -66,16 +65,16 @@ func Haversine(lat1, lon1, lat2, lon2 float64) float64 {
 	return distance // Distance in kilometers
 }
 
-func GetLastLocationAge(TimeStamp float64) (float64, error){
+func GetLastLocationAge(TimeStamp float64) (float64, error) {
 	// Current time in UNIX timestamp (seconds since January 1, 1970)
-    currentTime := time.Now().Unix()
+	currentTime := time.Now().Unix()
 	// The timestamp received from Wialon API
-    reportedTime := int64(TimeStamp)
+	reportedTime := int64(TimeStamp)
 	// Calculate the difference in seconds
 	timeDifference := currentTime - reportedTime
 	// Convert the difference to minutes
 	minutesAgo := timeDifference / 60
-	if minutesAgo < 0{
+	if minutesAgo < 0 {
 		return float64(minutesAgo), errors.New("unable to calculate location age in GetLastLocationAge()")
 	}
 	return float64(minutesAgo), nil
@@ -128,10 +127,10 @@ func CalculateETA(busID int, referenceCoords StopInfo, minutesAgo float64) (ETAR
 
 	// Create the result struct
 	ETAResult := ETAResult{
-		TrackerID:  busID,
-		ETAs:       [2]float64{ETAStopA, ETAStopB},
+		TrackerID:   busID,
+		ETAs:        [2]float64{ETAStopA, ETAStopB},
 		Coordinates: [2]float64{referenceCoords.Longitude, referenceCoords.Latitude},
-		MinutesAgo: minutesAgo,
+		MinutesAgo:  minutesAgo,
 	}
 
 	return ETAResult, nil
@@ -140,7 +139,7 @@ func CalculateETA(busID int, referenceCoords StopInfo, minutesAgo float64) (ETAR
 func GetBusETA(busesData []wialon.BusData, direction string) ([]ETAResult, error) {
 	var busesETAs []ETAResult
 	// Loop through the each bus to calculate the closest stop
-	for _, busData := range busesData{
+	for _, busData := range busesData {
 		// Get closest reference stop to bus ETA
 		closestStop, err := GetClosestStop(busData.Lat, busData.Lon, direction)
 		if err != nil {
