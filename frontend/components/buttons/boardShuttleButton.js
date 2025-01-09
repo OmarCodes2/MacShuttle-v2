@@ -1,17 +1,18 @@
-import { useMemo } from 'react';
-import { TouchableOpacity, Text, StyleSheet } from 'react-native';
-import { colors } from '../../constants/styles/colors';
+import { useMemo } from "react"
+import { TouchableOpacity, Text, StyleSheet } from "react-native"
+import { colors } from "../../constants/styles/colors"
+import { BOARDED } from "../../constants/shuttles/statuses"
 
-const boardShuttleButton = ({ status, onPress }) => {
+const BoardShuttleButton = ({ status, onPress }) => {
   const buttonColor = useMemo(
-    () => (status === 'board' ? colors.green : colors.red),
+    () => (status === BOARDED ? colors.red : colors.green),
     [status]
-  );
+  )
 
   const buttonText = useMemo(
-    () => (status === 'board' ? 'Board' : 'Disembark'),
+    () => (status === BOARDED ? "Disembark" : "Board"),
     [status]
-  );
+  )
 
   return (
     <TouchableOpacity
@@ -20,20 +21,20 @@ const boardShuttleButton = ({ status, onPress }) => {
     >
       <Text style={styles.text}>{buttonText}</Text>
     </TouchableOpacity>
-  );
-};
+  )
+}
 
 const styles = StyleSheet.create({
   button: {
-    padding: 16,
+    padding: 12,
     borderRadius: 8,
-    alignItems: 'center',
+    alignItems: "center",
   },
   text: {
     color: colors.white,
     // fontFamily: 'Montserrat-Regular',
-    textTransform: 'uppercase',
+    textTransform: "uppercase",
   },
-});
+})
 
-export default boardShuttleButton;
+export default BoardShuttleButton

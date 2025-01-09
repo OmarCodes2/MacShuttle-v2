@@ -1,26 +1,27 @@
-import { TouchableOpacity, Text, StyleSheet } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import { colors } from '../../constants/styles/colors';
+import { TouchableOpacity, Text, StyleSheet } from "react-native"
+import { colors } from "../../constants/styles/colors"
 
 const MyShuttleButton = ({ onPress }) => {
   return (
     <TouchableOpacity style={styles.button} onPress={onPress}>
-      <Text style={styles.text}>My Shuttle</Text>
-      <Ionicons name='chevron-forward' size={16} style={styles.icon} />
+      <Text style={styles.text}>My Current Shuttle</Text>
     </TouchableOpacity>
-  );
-};
+  )
+}
 
 const styles = StyleSheet.create({
   button: {
-    padding: 16,
+    padding: 12,
     borderRadius: 8,
-    alignItems: 'center',
-    justifyContent: 'center',
-    display: 'flex',
-    flexDirection: 'row',
+    alignItems: "center",
+    justifyContent: "center",
+    display: "flex",
+    flexDirection: "row",
     gap: 8,
     backgroundColor: colors.green,
+    position: "absolute",
+    top: 48,
+    alignSelf: "center",
   },
   icon: {
     color: colors.white,
@@ -28,8 +29,8 @@ const styles = StyleSheet.create({
   text: {
     color: colors.white,
     // fontFamily: 'Montserrat-Regular',
-    textTransform: 'uppercase',
+    textTransform: "uppercase",
   },
-});
+})
 
-export default MyShuttleButton;
+export default MyShuttleButton
