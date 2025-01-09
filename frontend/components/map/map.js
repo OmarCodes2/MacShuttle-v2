@@ -5,7 +5,7 @@ import MapMarker from "./marker"
 import { busStops } from "../../constants/map/location"
 import useRegion from "./useRegion"
 
-const Map = ({ busData, handleSelectStop }) => {
+const Map = ({ busData, dummyBusPositions = [], handleSelectStop }) => {
   const { region, handleRegionChangeComplete } = useRegion()
 
   return (
@@ -18,6 +18,7 @@ const Map = ({ busData, handleSelectStop }) => {
           showsUserLocation
           onRegionChangeComplete={handleRegionChangeComplete}
         >
+          {/* Existing busStops Markers */}
           {busStops.map((busStop) => (
             <MapMarker
               key={busStop.stop}
@@ -26,6 +27,8 @@ const Map = ({ busData, handleSelectStop }) => {
               onPress={() => handleSelectStop(busStop.stop)}
             />
           ))}
+
+          {/* Existing busData marker (whatever your real-time bus is) */}
           {busData.length > 0 && (
             <MapMarker
               latitude={busData[3]} // latitude of the bus
@@ -33,6 +36,16 @@ const Map = ({ busData, handleSelectStop }) => {
               type="moving"
             />
           )}
+
+          {/* NEW: Render TWO dummy bus markers using marker-moving.svg */}
+          {dummyBusPositions.map((pos, index) => (
+            <MapMarker
+              key={`dummy-bus-${index}`}
+              latitude={pos.latitude}
+              longitude={pos.longitude}
+              type="moving"
+            />
+          ))}
         </MapView>
       ) : (
         <ActivityIndicator size="large" />

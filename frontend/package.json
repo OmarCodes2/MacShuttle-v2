@@ -14,7 +14,7 @@
     "@expo/vector-icons": "^14.0.2",
     "@gorhom/bottom-sheet": "^4.6.4",
     "axios": "^1.7.9",
-    "expo": "^52.0.23",
+    "expo": "~52.0.24",
     "expo-cli": "^6.3.12",
     "expo-font": "~13.0.2",
     "expo-location": "~18.0.4",
